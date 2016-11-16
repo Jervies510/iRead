@@ -83,8 +83,9 @@ public class MyFragmentMovie extends Fragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-//              Log.d("tmd", "onResponse: response的加载结果是：" +response.body().string());
+                // Log.d("tmd", "onResponse: response的加载结果是：" +response.body().string());
                 MovieBean movieBean = new Gson().fromJson(response.body().string(), MovieBean.class);
+                list.clear();
                 list.addAll(movieBean.getResult());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -109,12 +110,12 @@ public class MyFragmentMovie extends Fragment {
         @Override
         public void onBindViewHolder(MyViewHolder holder, int position) {
             holder.tv_title.setText(list.get(position).getTitle());
-            Picasso.with(getActivity()).load(UrlUtils.URLPIC + list.get(position).getImage()).into(holder.iv);  //通过Picasso设置显示图片
+            Picasso.with(getActivity()).load(UrlUtils.URLPICTURE + list.get(position).getImage()).into(holder.iv);  //通过Picasso设置显示图片
             holder.tv_summary.setText(list.get(position).getSummary());
 
             //格式化显示内容更新日期
-            Date date = new Date();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss E");
+            Date date = new Date(System.currentTimeMillis()-24*3600*1000*position);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd E");
             String format = dateFormat.format(date);
             holder.tv_date_movie.setText(format);
 

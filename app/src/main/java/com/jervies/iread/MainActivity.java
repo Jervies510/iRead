@@ -5,11 +5,14 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.Window;
 
 import com.jervies.iread.adapter.MyViewPagerAdapterMain;
 import com.jervies.iread.fragment.MyFragmentMovie;
 import com.jervies.iread.fragment.MyFragmentNovel;
+import com.jervies.iread.fragment.MyFragmentPersonal;
+import com.jervies.iread.fragment.MyFragmentPic;
 
 import java.util.ArrayList;
 
@@ -54,20 +57,21 @@ public class MainActivity extends FragmentActivity {
     }
 
     /**
-     * 初始化ViewPager显示数据
+     * 初始化ViewPager显示的Fragment数据
      */
     private void initViewPagerData() {
+        //影评Fragment
         MyFragmentMovie myFragmentMovie = new MyFragmentMovie();
         fragments.add(myFragmentMovie);
-
+        //美文Fragment
         MyFragmentNovel myFragmentNovel = new MyFragmentNovel();
         fragments.add(myFragmentNovel);
-
-        MyFragmentMovie myFragmentMovie1 = new MyFragmentMovie();
-        fragments.add(myFragmentMovie1);
-
-        MyFragmentNovel myFragmentNovel1 = new MyFragmentNovel();
-        fragments.add(myFragmentNovel1);
+        //美图Fragment
+        MyFragmentPic myFragmentPic = new MyFragmentPic();
+        fragments.add(myFragmentPic);
+        //个人中心Fragment
+        MyFragmentPersonal myFragmentPersonal = new MyFragmentPersonal();
+        fragments.add(myFragmentPersonal);
     }
 
     /**

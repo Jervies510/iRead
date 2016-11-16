@@ -23,7 +23,7 @@
             android:id="@+id/textView_summary_item_novel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:paddingTop="16dp"/>
 
         <TextView

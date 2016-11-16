@@ -8,13 +8,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jervies.iread.R;
 import com.jervies.iread.UrlUtils.UrlUtils;
-import com.jervies.iread.bean.NovelBean;
+import com.jervies.iread.bean.PicBean;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -29,16 +31,16 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by Jervies on 2016/11/15.
+ * Created by Jervies on 2016/11/16.
  */
 
-public class MyFragmentNovel extends Fragment {
+public class MyFragmentPic extends Fragment {
 
     private RecyclerView mRecyclerView;
     private OkHttpClient mOkHttpClient;
 
-    private ArrayList<NovelBean.ResultBean> list = new ArrayList<>();
-    private MyRecyclerViewNovelAdapter adapter;
+    private ArrayList<PicBean.ResultBean> list = new ArrayList<>();
+    private MyRecyclerViewAdapter adapter;
 
     @Nullable
     @Override
@@ -52,24 +54,25 @@ public class MyFragmentNovel extends Fragment {
         mOkHttpClient = new OkHttpClient();
         mRecyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         initRecyclerViewData();
-        initRecyclerViewAdapter();
+        initReCyclerViewAdapter();
     }
 
     /**
-     * 设置适配器
+     * 初始化RecyclerView的适配器
      */
-    private void initRecyclerViewAdapter() {
-        adapter = new MyRecyclerViewNovelAdapter();
+    private void initReCyclerViewAdapter() {
+        adapter = new MyRecyclerViewAdapter();
         mRecyclerView.setAdapter(adapter);
     }
 
     /**
-     * 通过OkHttp框架加载网络数据并初始化显示数据
+     * 通过OkHttp加载网络数据并设置显示
      */
     private void initRecyclerViewData() {
-        final Request request = new Request.Builder()
-                .url(UrlUtils.URLNOVEL)
+        Request request = new Request.Builder()
+                .url(UrlUtils.URLPIC)
                 .build();
         Call call = mOkHttpClient.newCall(request);
         call.enqueue(new Callback() {
@@ -80,10 +83,9 @@ public class MyFragmentNovel extends Fragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-//              Log.d("tmd", "onResponse: response的加载结果是：" +response.body().string());
-                NovelBean novelBean = new Gson().fromJson(response.body().string(), NovelBean.class);
+                PicBean picBean = new Gson().fromJson(response.body().string(), PicBean.class);
                 list.clear();
-                list.addAll(novelBean.getResult());
+                list.addAll(picBean.getResult());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -97,23 +99,24 @@ public class MyFragmentNovel extends Fragment {
     /**
      * 定义RecyclerView的适配器
      */
-    class MyRecyclerViewNovelAdapter extends RecyclerView.Adapter<MyRecyclerViewNovelAdapter.MyNovelViewHolder>{
+    class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyPicViewHolder>{
 
         @Override
-        public MyNovelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MyNovelViewHolder(LayoutInflater.from(getActivity()).inflate(R.layout.fragment_recyclerview_item_novel,parent,false));
+        public MyPicViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new MyPicViewHolder(LayoutInflater.from(getActivity()).inflate(R.layout.fragment_recyclerview_item_pic,parent,false));
         }
 
         @Override
-        public void onBindViewHolder(MyNovelViewHolder holder, int position) {
-            holder.tv_title_novel.setText(list.get(position).getTitle());
-            holder.tv_summary_novel.setText(list.get(position).getSummary());
+        public void onBindViewHolder(MyPicViewHolder holder, int position) {
+            holder.tv_title_pic.setText(list.get(position).getTitle());
+            Picasso.with(getActivity()).load(UrlUtils.URLPICTURE+list.get(position).getImage()).into(holder.iv_pic);
+            holder.tv_summary_Pic.setText(list.get(position).getSummary());
 
-            //格式化显示内容更新日期
+            //格式化并显示发布时间
             Date date = new Date(System.currentTimeMillis()-24*3600*1000*position);
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd E");
             String format = dateFormat.format(date);
-            holder.tv_date_novel.setText(format);
+            holder.tv_date_pic.setText(format);
         }
 
         @Override
@@ -121,15 +124,18 @@ public class MyFragmentNovel extends Fragment {
             return list.size();
         }
 
-        class MyNovelViewHolder extends RecyclerView.ViewHolder{
-            TextView tv_title_novel;
-            TextView tv_summary_novel;
-            TextView tv_date_novel;
-            public MyNovelViewHolder(View itemView) {
+        class MyPicViewHolder extends RecyclerView.ViewHolder{
+
+            TextView tv_title_pic;
+            ImageView iv_pic;
+            TextView tv_summary_Pic;
+            TextView tv_date_pic;
+            public MyPicViewHolder(View itemView) {
                 super(itemView);
-                tv_title_novel = (TextView)itemView.findViewById(R.id.textView_title_item_novel);
-                tv_summary_novel = (TextView)itemView.findViewById(R.id.textView_summary_item_novel);
-                tv_date_novel = (TextView)itemView.findViewById(R.id.textView_date_item_novel);
+                tv_title_pic = (TextView)itemView.findViewById(R.id.textView_title_item_pic);
+                iv_pic = (ImageView) itemView.findViewById(R.id.imageView_item_Pic);
+                tv_summary_Pic = (TextView)itemView.findViewById(R.id.textView_summary_item_pic);
+                tv_date_pic = (TextView)itemView.findViewById(R.id.textView_data_item_Pic);
             }
         }
     }

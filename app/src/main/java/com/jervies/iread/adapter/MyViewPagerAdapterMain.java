@@ -15,10 +15,6 @@ public class MyViewPagerAdapterMain extends FragmentPagerAdapter {
     private ArrayList<Fragment> mFragments;
     private String[] mTabs;
 
-    public MyViewPagerAdapterMain(FragmentManager fm) {
-        super(fm);
-    }
-
     public MyViewPagerAdapterMain(FragmentManager fm, ArrayList<Fragment> fragments, String[] tabs) {
         super(fm);
         mFragments = fragments;
