@@ -1,5 +1,6 @@
 package com.jervies.iread.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jervies.iread.MovieItemActivity;
 import com.jervies.iread.R;
 import com.jervies.iread.UrlUtils.UrlUtils;
 import com.jervies.iread.bean.MovieBean;
@@ -39,6 +41,7 @@ public class MyFragmentMovie extends Fragment {
 
     private RecyclerView mRecyclerView;
     private OkHttpClient mOkHttpClient;
+    private TextView title;
 
     private ArrayList<MovieBean.ResultBean> list = new ArrayList<>();
     private MyRecyclerViewAdapter adapter;
@@ -55,6 +58,11 @@ public class MyFragmentMovie extends Fragment {
         mOkHttpClient = new OkHttpClient();
         mRecyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //设置显示标题栏的显示内容
+        title = (TextView)view.findViewById(R.id.textView_TitleBar);
+        title.setText("影评精选");
+
         initRecyclerViewData();
         initRecyclerViewAdapter();
     }
@@ -108,7 +116,7 @@ public class MyFragmentMovie extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
+        public void onBindViewHolder(MyViewHolder holder, final int position) {
             holder.tv_title.setText(list.get(position).getTitle());
             Picasso.with(getActivity()).load(UrlUtils.URLPICTURE + list.get(position).getImage()).into(holder.iv);  //通过Picasso设置显示图片
             holder.tv_summary.setText(list.get(position).getSummary());
@@ -119,11 +127,13 @@ public class MyFragmentMovie extends Fragment {
             String format = dateFormat.format(date);
             holder.tv_date_movie.setText(format);
 
-            //添加点击事件，并跳转页面显示全文
+            //添加点击事件，并跳转页面显示影评全文
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    Intent intent = new Intent(getActivity(), MovieItemActivity.class);
+                    intent.putExtra("item_id",list.get(position).getId());
+                    startActivity(intent);
                 }
             });
         }

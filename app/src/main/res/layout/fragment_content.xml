@@ -12,8 +12,7 @@
         android:gravity="center"
         android:background="#3aaf51"
         android:textSize="22sp"
-        android:textColor="#ffffff"
-        android:text="影评精选"/>
+        android:textColor="#ffffff"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"

@@ -16,6 +16,8 @@ import com.jervies.iread.R;
 import com.jervies.iread.UrlUtils.UrlUtils;
 import com.jervies.iread.bean.NovelBean;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -36,6 +38,7 @@ public class MyFragmentNovel extends Fragment {
 
     private RecyclerView mRecyclerView;
     private OkHttpClient mOkHttpClient;
+    private TextView title;
 
     private ArrayList<NovelBean.ResultBean> list = new ArrayList<>();
     private MyRecyclerViewNovelAdapter adapter;
@@ -52,6 +55,11 @@ public class MyFragmentNovel extends Fragment {
         mOkHttpClient = new OkHttpClient();
         mRecyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //设置显示标题栏的显示内容
+        title = (TextView)view.findViewById(R.id.textView_TitleBar);
+        title.setText("美文精选");
+
         initRecyclerViewData();
         initRecyclerViewAdapter();
     }

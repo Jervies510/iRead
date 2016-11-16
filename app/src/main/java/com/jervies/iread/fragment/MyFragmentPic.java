@@ -38,6 +38,7 @@ public class MyFragmentPic extends Fragment {
 
     private RecyclerView mRecyclerView;
     private OkHttpClient mOkHttpClient;
+    private TextView title;
 
     private ArrayList<PicBean.ResultBean> list = new ArrayList<>();
     private MyRecyclerViewAdapter adapter;
@@ -54,6 +55,10 @@ public class MyFragmentPic extends Fragment {
         mOkHttpClient = new OkHttpClient();
         mRecyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //设置显示标题栏的显示内容
+        title = (TextView)view.findViewById(R.id.textView_TitleBar);
+        title.setText("美图精选");
 
         initRecyclerViewData();
         initReCyclerViewAdapter();

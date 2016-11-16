@@ -11,6 +11,6 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@mipmap/welcomepager1"
+        android:src="@mipmap/start_bg"
         android:scaleType="fitXY"/>
 </RelativeLayout>

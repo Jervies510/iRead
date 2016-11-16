@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         tabLayout:tabMode="fixed"
         tabLayout:tabGravity="fill"
-        tabLayout:tabSelectedTextColor="#3aaf51"
+        tabLayout:tabSelectedTextColor="#329d47"
         tabLayout:tabIndicatorHeight="0dp"
         android:layout_alignParentBottom="true"/>
 

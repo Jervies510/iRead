@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_movie_item"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jervies.iread.MovieItemActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!--显示解析数据图片Imageforplay-->
+            <ImageView
+                android:id="@+id/imageView_MovieItem_Imageforplay"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_launcher"/>
+
+            <!--显示内容的布局-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="14dp">
+
+                <!---->
+                <TextView
+                    android:id="@+id/textView_MovieItem_Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#000000"
+                    android:layout_marginTop="10dp"
+                    android:text="这是文章标题"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+
+                    <!--显示解析数据作者名-->
+                    <TextView
+                        android:id="@+id/textView_MovieItem_author"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="作者：阿伯尼"/>
+
+                    <!--显示解析数据文章阅读量-->
+                    <TextView
+                        android:id="@+id/textView_MovieItem_times"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="阅读量：5752"/>
+                </LinearLayout>
+
+                <!--显示解析数据文本text1-->
+                <TextView
+                    android:id="@+id/textView_MovieItem_text1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginTop="30dp"
+                    android:padding="20dp"
+                    android:background="#dbd8d8"
+                    android:text="电影没有交代前因后果，仅仅是抽取主角三人的一部分生活，并将之呈现在银幕上。但卡萨维茨却通过几个小事件就将兄妹三人的性格刻画出来。"/>
+
+                <!--分割线-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="#dbd8d8"/>
+
+                <!--显示解析数据图片imageView1-->
+                <ImageView
+                    android:id="@+id/imageView_Moive_imageView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/ic_launcher"/>
+
+                <!--分割线-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="#dbd8d8"/>
+
+                <!--显示解析数据文本text2-->
+                <TextView
+                    android:id="@+id/textView_MovieItem_text2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="剧情简介
+
+                    丽兹和班尼都出生在一个有色人种的家庭。在一次文学聚会上，丽兹遇到了年轻英俊的白人知识青年托尼，"/>
+
+                <!--分割线-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="#dbd8d8"/>
+
+                <!--显示解析数据真正标题realTitle-->
+                <TextView
+                    android:id="@+id/textView_MovieItem_realTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#000000"
+                    android:layout_marginTop="10dp"
+                    android:text="这是文章真正标题"/>
+
+                <!--显示解析数据图片imageView2-->
+                <ImageView
+                    android:id="@+id/imageView_Moive_imageView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="fitXY"
+                    android:layout_marginTop="10dp"
+                    android:src="@mipmap/ic_launcher"/>
+
+                <!--显示解析数据文本text3-->
+                <TextView
+                    android:id="@+id/textView_MovieItem_text3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    android:text="我并未读过尼尔·盖曼的原著（这位帅哥的作品我一本也没有读过），所以只能从影片的角度来谈谈个人想法，"/>
+
+                <!--显示解析数据图片imageView3-->
+                <ImageView
+                    android:id="@+id/imageView_Moive_imageView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="fitXY"
+                    android:layout_marginTop="10dp"
+                    android:src="@mipmap/ic_launcher"/>
+
+                <!--显示解析数据文本text4-->
+                <TextView
+                    android:id="@+id/textView_MovieItem_text4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    android:text="我并未读过尼尔·盖曼的原著（这位帅哥的作品我一本也没有读过），所以只能从影片的角度来谈谈个人想法，"/>
+
+                <!--显示解析数据图片imageView4-->
+                <ImageView
+                    android:id="@+id/imageView_Moive_imageView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="fitXY"
+                    android:layout_marginTop="10dp"
+                    android:src="@mipmap/ic_launcher"/>
+
+                <!--显示解析数据文本text5-->
+                <TextView
+                    android:id="@+id/textView_MovieItem_text5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    android:text="我并未读过尼尔·盖曼的原著（这位帅哥的作品我一本也没有读过），所以只能从影片的角度来谈谈个人想法，"/>
+
+                <!--分割线-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="#dbd8d8"/>
+
+                <!--显示作者名-->
+                <TextView
+                    android:id="@+id/textView_MovieItem_author1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#000000"
+                    android:layout_marginTop="10dp"
+                    android:text="作者名"/>
+
+                <!--显示作者简介-->
+                <TextView
+                    android:id="@+id/textView_MovieItem_authorBrief"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    android:text="作者简介"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

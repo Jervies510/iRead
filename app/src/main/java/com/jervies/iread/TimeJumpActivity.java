@@ -25,6 +25,6 @@ public class TimeJumpActivity extends AppCompatActivity {
                 finish();
             }
         };
-        timer.schedule(timerTask,3000);
+        timer.schedule(timerTask,2000);
     }
 }
