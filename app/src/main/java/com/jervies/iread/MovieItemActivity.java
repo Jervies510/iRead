@@ -1,6 +1,8 @@
 package com.jervies.iread;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
@@ -27,8 +29,6 @@ public class MovieItemActivity extends AppCompatActivity {
     private OkHttpClient mOkHttpClient;
     private int item_id;    //每篇影评所对应的id值
 
-    private ArrayList<MovieItemBean> list = new ArrayList<>();
-
     private ImageView mImageViewMovieItemImageforplay;
     private TextView mTextViewMovieItemTitle;
     private TextView mTextViewMovieItemAuthor;
@@ -46,40 +46,24 @@ public class MovieItemActivity extends AppCompatActivity {
     private TextView mTextViewMovieItemAuthor1;
     private TextView mTextViewMovieItemAuthorBrief;
 
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            mMovieItemBean = (MovieItemBean) msg.obj;
+            initDisplayContent();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_item);
-        initView();
-
-
-        item_id = getIntent().getIntExtra("item_id", 0);    //获取从Fragment中传递来的数据-每篇影评所对应的id值
-        //Log.d("tmd", "onCreate: item_id:" + item_id);
         mOkHttpClient = new OkHttpClient();
+        item_id = getIntent().getIntExtra("item_id", 0);    //获取从Fragment中传递来的数据-每篇影评所对应的id值
 
+        initView();
         initData();     //从网络中加载数据
-//        initDisplayContent();
-    }
-
-    private void initDisplayContent() {
-        mMovieItemBean = list.get(0);
-        Log.d("tmd", "initDisplayContent: mMovieItemBean :" +mMovieItemBean.toString());
-//        Picasso.with(this).load(UrlUtils.URLPICTURE + mMovieItemBean.getImageforplay()).into(mImageViewMovieItemImageforplay);
-//        mTextViewMovieItemTitle.setText(mMovieItemBean.getTitle());
-//        mTextViewMovieItemAuthor.setText(mMovieItemBean.getAuthor());
-//        mTextViewMovieItemTimes.setText(mMovieItemBean.getTimes());
-//        mTextViewMovieItemText1.setText(mMovieItemBean.getText1());
-//        Picasso.with(this).load(UrlUtils.URLPICTURE + mMovieItemBean.getImage1()).into(mImageViewMoiveImageView1);
-//        mTextViewMovieItemText2.setText(mMovieItemBean.getText2());
-//        mTextViewMovieItemRealTitle.setText(mMovieItemBean.getRealtitle());
-//        Picasso.with(this).load(UrlUtils.URLPICTURE + mMovieItemBean.getImage2()).into(mImageViewMoiveImageView2);
-//        mTextViewMovieItemText3.setText(mMovieItemBean.getText3());
-//        Picasso.with(this).load(UrlUtils.URLPICTURE + mMovieItemBean.getImage3()).into(mImageViewMoiveImageView3);
-//        mTextViewMovieItemText4.setText(mMovieItemBean.getText4());
-//        Picasso.with(this).load(UrlUtils.URLPICTURE + mMovieItemBean.getImage4()).into(mImageViewMoiveImageView4);
-//        mTextViewMovieItemText5.setText(mMovieItemBean.getText5());
-//        mTextViewMovieItemAuthor1.setText(mMovieItemBean.getAuthor());
-//        mTextViewMovieItemAuthorBrief.setText(mMovieItemBean.getAuthorbrief());
     }
 
     /**
@@ -99,12 +83,35 @@ public class MovieItemActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 //Log.d("tmd", "onResponse: response:" + response.body().string());
-                MovieItemBean movieItemBean = new Gson().fromJson(response.body().string(), MovieItemBean.class);
-                list.add(movieItemBean);
-                //Log.d("tmd", "onResponse: listString: " +list.get(0).toString());
+                final MovieItemBean movieItemBean = new Gson().fromJson(response.body().string(), MovieItemBean.class);
+                //Log.d("tmd", "onResponse: movieItemBean :" + movieItemBean.toString());
+                Message msg = new Message();
+                msg.obj = movieItemBean;
+                mHandler.sendMessage(msg);
             }
         });
+    }
 
+    private void initDisplayContent() {
+        Log.d("tmd", "验证initDisplayContent: 是否运行");
+        Log.d("tmd", "initDisplayContent: mMovieItemBean显示 :" +mMovieItemBean.toString());
+
+        Picasso.with(this).load(UrlUtils.URLPICTURE + mMovieItemBean.getImageforplay()).into(mImageViewMovieItemImageforplay);
+        mTextViewMovieItemTitle.setText(mMovieItemBean.getTitle());
+        mTextViewMovieItemAuthor.setText(mMovieItemBean.getAuthor());
+        mTextViewMovieItemTimes.setText(mMovieItemBean.getTimes()+"");
+        mTextViewMovieItemText1.setText(mMovieItemBean.getText1());
+        Picasso.with(this).load(UrlUtils.URLPICTURE + mMovieItemBean.getImage1()).into(mImageViewMoiveImageView1);
+        mTextViewMovieItemText2.setText(mMovieItemBean.getText2());
+        mTextViewMovieItemRealTitle.setText(mMovieItemBean.getRealtitle());
+        Picasso.with(this).load(UrlUtils.URLPICTURE + mMovieItemBean.getImage2()).into(mImageViewMoiveImageView2);
+        mTextViewMovieItemText3.setText(mMovieItemBean.getText3());
+        Picasso.with(this).load(UrlUtils.URLPICTURE + mMovieItemBean.getImage3()).into(mImageViewMoiveImageView3);
+        mTextViewMovieItemText4.setText(mMovieItemBean.getText4());
+        Picasso.with(this).load(UrlUtils.URLPICTURE + mMovieItemBean.getImage4()).into(mImageViewMoiveImageView4);
+        mTextViewMovieItemText5.setText(mMovieItemBean.getText5());
+        mTextViewMovieItemAuthor1.setText(mMovieItemBean.getAuthor());
+        mTextViewMovieItemAuthorBrief.setText(mMovieItemBean.getAuthorbrief());
     }
 
     private void initView() {
