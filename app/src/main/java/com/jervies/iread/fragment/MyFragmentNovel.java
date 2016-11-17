@@ -1,5 +1,6 @@
 package com.jervies.iread.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jervies.iread.NovelItemActivity;
 import com.jervies.iread.R;
 import com.jervies.iread.UrlUtils.UrlUtils;
 import com.jervies.iread.bean.NovelBean;
@@ -88,7 +90,7 @@ public class MyFragmentNovel extends Fragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-//              Log.d("tmd", "onResponse: response的加载结果是：" +response.body().string());
+                //Log.d("tmd", "onResponse: response的加载结果是：" +response.body().string());
                 NovelBean novelBean = new Gson().fromJson(response.body().string(), NovelBean.class);
                 list.clear();
                 list.addAll(novelBean.getResult());
@@ -113,7 +115,7 @@ public class MyFragmentNovel extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(MyNovelViewHolder holder, int position) {
+        public void onBindViewHolder(MyNovelViewHolder holder, final int position) {
             holder.tv_title_novel.setText(list.get(position).getTitle());
             holder.tv_summary_novel.setText(list.get(position).getSummary());
 
@@ -122,6 +124,17 @@ public class MyFragmentNovel extends Fragment {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd E");
             String format = dateFormat.format(date);
             holder.tv_date_novel.setText(format);
+
+            //点击item跳转页面显示美文详情
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), NovelItemActivity.class);
+                    intent.putExtra("item_id",list.get(position).getId());
+                    intent.putExtra("item_type",list.get(position).getType());
+                    startActivity(intent);
+                }
+            });
         }
 
         @Override

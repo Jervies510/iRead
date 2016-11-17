@@ -3,6 +3,7 @@ package com.jervies.iread;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
 import android.widget.ImageView;
 
 import java.util.Timer;
@@ -16,7 +17,9 @@ public class TimeJumpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_time_jump);
+
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override

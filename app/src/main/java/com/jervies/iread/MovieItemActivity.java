@@ -1,5 +1,6 @@
 package com.jervies.iread;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,6 +29,7 @@ public class MovieItemActivity extends AppCompatActivity {
     private MovieItemBean mMovieItemBean;
     private OkHttpClient mOkHttpClient;
     private int item_id;    //每篇影评所对应的id值
+    private int item_type;  //用于区别是影评，美文，美图的类型
 
     private ImageView mImageViewMovieItemImageforplay;
     private TextView mTextViewMovieItemTitle;
@@ -51,7 +53,7 @@ public class MovieItemActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             mMovieItemBean = (MovieItemBean) msg.obj;
-            initDisplayContent();
+            initDisplayMovie();   //调用该方法用于设置空间显示数据信息
         }
     };
 
@@ -60,7 +62,9 @@ public class MovieItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_item);
         mOkHttpClient = new OkHttpClient();
-        item_id = getIntent().getIntExtra("item_id", 0);    //获取从Fragment中传递来的数据-每篇影评所对应的id值
+        Intent intent = getIntent();
+        item_id = intent.getIntExtra("item_id", 0);    //获取从Fragment中传递来的数据-每篇影评所对应的id值
+        item_type = intent.getIntExtra("item_type",0);
 
         initView();
         initData();     //从网络中加载数据
@@ -82,7 +86,6 @@ public class MovieItemActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                //Log.d("tmd", "onResponse: response:" + response.body().string());
                 final MovieItemBean movieItemBean = new Gson().fromJson(response.body().string(), MovieItemBean.class);
                 //Log.d("tmd", "onResponse: movieItemBean :" + movieItemBean.toString());
                 Message msg = new Message();
@@ -92,14 +95,17 @@ public class MovieItemActivity extends AppCompatActivity {
         });
     }
 
-    private void initDisplayContent() {
+    /**
+     * 设置布局控件显示信息
+     */
+    private void initDisplayMovie() {
         Log.d("tmd", "验证initDisplayContent: 是否运行");
         Log.d("tmd", "initDisplayContent: mMovieItemBean显示 :" +mMovieItemBean.toString());
 
         Picasso.with(this).load(UrlUtils.URLPICTURE + mMovieItemBean.getImageforplay()).into(mImageViewMovieItemImageforplay);
         mTextViewMovieItemTitle.setText(mMovieItemBean.getTitle());
-        mTextViewMovieItemAuthor.setText(mMovieItemBean.getAuthor());
-        mTextViewMovieItemTimes.setText(mMovieItemBean.getTimes()+"");
+        mTextViewMovieItemAuthor.setText("作者:"+mMovieItemBean.getAuthor());
+        mTextViewMovieItemTimes.setText("阅读量:"+mMovieItemBean.getTimes());
         mTextViewMovieItemText1.setText(mMovieItemBean.getText1());
         Picasso.with(this).load(UrlUtils.URLPICTURE + mMovieItemBean.getImage1()).into(mImageViewMoiveImageView1);
         mTextViewMovieItemText2.setText(mMovieItemBean.getText2());

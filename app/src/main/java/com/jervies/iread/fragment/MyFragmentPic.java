@@ -1,5 +1,6 @@
 package com.jervies.iread.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jervies.iread.PicItemActivity;
 import com.jervies.iread.R;
 import com.jervies.iread.UrlUtils.UrlUtils;
 import com.jervies.iread.bean.PicBean;
@@ -112,7 +114,7 @@ public class MyFragmentPic extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(MyPicViewHolder holder, int position) {
+        public void onBindViewHolder(MyPicViewHolder holder, final int position) {
             holder.tv_title_pic.setText(list.get(position).getTitle());
             Picasso.with(getActivity()).load(UrlUtils.URLPICTURE+list.get(position).getImage()).into(holder.iv_pic);
             holder.tv_summary_Pic.setText(list.get(position).getSummary());
@@ -122,6 +124,17 @@ public class MyFragmentPic extends Fragment {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd E");
             String format = dateFormat.format(date);
             holder.tv_date_pic.setText(format);
+
+            //实现页面的跳转，用来查看PicItemActivity页面显示的美图信息
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), PicItemActivity.class);
+                    intent.putExtra("item_id",list.get(position).getId());
+                    intent.putExtra("item_type",list.get(position).getType());
+                    startActivity(intent);
+                }
+            });
         }
 
         @Override

@@ -133,6 +133,7 @@ public class MyFragmentMovie extends Fragment {
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), MovieItemActivity.class);
                     intent.putExtra("item_id",list.get(position).getId());
+                    intent.putExtra("item_type",list.get(position).getType());
                     startActivity(intent);
                 }
             });
