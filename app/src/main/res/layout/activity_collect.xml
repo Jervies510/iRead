@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_collect"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jervies.iread.CollectActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#36a94c">
+
+        <ImageView
+            android:id="@+id/imageView_CollectActivity_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:layout_marginLeft="12dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/back"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="#ffffff"
+            android:layout_centerInParent="true"
+            android:text="我的收藏"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textView_CollectActivity_subTitleMovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#36a94c"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="6dp"
+        android:text="影评精选"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_CollectActivty_movie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"/>
+
+    <TextView
+        android:id="@+id/textView_CollectActivity_subTitleNovel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#36a94c"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="6dp"
+        android:text="美文精选"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_CollectActivty_novel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"/>
+
+    <TextView
+        android:id="@+id/textView_CollectActivity_subTitlePic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#36a94c"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="6dp"
+        android:text="美图精选"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_CollectActivty_pic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"/>
+</LinearLayout>

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:gravity="center"
-        android:background="#3aaf51"
+        android:background="#36a94c"
         android:textSize="22sp"
         android:textColor="#ffffff"/>
 

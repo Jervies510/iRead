@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.jervies.iread.adapter.MyViewPagerAdapterMain;
 import com.jervies.iread.fragment.MyFragmentMovie;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity {
 
+    private long lastTime = 0;
     private ViewPager mViewPagerMain;
     private TabLayout mTabLayout;
     private MyViewPagerAdapterMain viewPagerAdapter;
@@ -80,5 +82,17 @@ public class MainActivity extends FragmentActivity {
     private void initView() {
         mViewPagerMain = (ViewPager) findViewById(R.id.viewPager_main);
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
+    }
+
+    //添加按返回键显示"再按一次退出效果"
+    @Override
+    public void onBackPressed() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastTime > 1500) {
+            Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
+        }else {
+            finish();
+        }
+        lastTime = currentTime;
     }
 }

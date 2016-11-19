@@ -1,12 +1,14 @@
 package com.jervies.iread.fragment;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import com.jervies.iread.MovieItemActivity;
 import com.jervies.iread.R;
 import com.jervies.iread.UrlUtils.UrlUtils;
 import com.jervies.iread.bean.MovieBean;
+import com.jervies.iread.helpClass.MySQLiteOpenHelder;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -41,26 +44,29 @@ public class MyFragmentMovie extends Fragment {
 
     private RecyclerView mRecyclerView;
     private OkHttpClient mOkHttpClient;
+    private MySQLiteOpenHelder mMySQLiteOpenHelder;
     private TextView title;
 
     private ArrayList<MovieBean.ResultBean> list = new ArrayList<>();
     private MyRecyclerViewAdapter adapter;
+    private SQLiteDatabase db;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_content,container,false);
+        return inflater.inflate(R.layout.fragment_content, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mOkHttpClient = new OkHttpClient();
-        mRecyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        mOkHttpClient = new OkHttpClient();
+        mMySQLiteOpenHelder = new MySQLiteOpenHelder(getActivity(),"iRead",null,1);
+        db = mMySQLiteOpenHelder.getReadableDatabase();
         //设置显示标题栏的显示内容
-        title = (TextView)view.findViewById(R.id.textView_TitleBar);
+        title = (TextView) view.findViewById(R.id.textView_TitleBar);
         title.setText("影评精选");
 
         initRecyclerViewData();
@@ -86,7 +92,7 @@ public class MyFragmentMovie extends Fragment {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(getActivity(), "内容加载失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "影评加载失败", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -108,11 +114,11 @@ public class MyFragmentMovie extends Fragment {
     /**
      * 定义RecyclerView的适配器
      */
-    class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder>{
+    class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder> {
 
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MyViewHolder(LayoutInflater.from(getActivity()).inflate(R.layout.fragment_recyclerview_item_movie,parent,false));
+            return new MyViewHolder(LayoutInflater.from(getActivity()).inflate(R.layout.fragment_recyclerview_item_movie, parent, false));
         }
 
         @Override
@@ -122,7 +128,7 @@ public class MyFragmentMovie extends Fragment {
             holder.tv_summary.setText(list.get(position).getSummary());
 
             //格式化显示内容更新日期
-            Date date = new Date(System.currentTimeMillis()-24*3600*1000*position);
+            Date date = new Date(System.currentTimeMillis() - 24 * 3600 * 1000 * position);
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd E");
             String format = dateFormat.format(date);
             holder.tv_date_movie.setText(format);
@@ -132,11 +138,50 @@ public class MyFragmentMovie extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), MovieItemActivity.class);
-                    intent.putExtra("item_id",list.get(position).getId());
-                    intent.putExtra("item_type",list.get(position).getType());
+                    intent.putExtra("item_id", list.get(position).getId());
+                    intent.putExtra("item_type", list.get(position).getType());
                     startActivity(intent);
                 }
             });
+
+            //给Item添加长按监听事件，用于显示自定义AlertDialog
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    View customDialog_View = LayoutInflater.from(getActivity()).inflate(R.layout.custom_dialog, null);
+                    final AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                            .setView(customDialog_View)
+                            .show();
+                    //设置Dialog的显示标题
+                    TextView dialogTitle = (TextView) customDialog_View.findViewById(R.id.textView_CustomDialog_title);
+                    dialogTitle.setText("影评精选");
+                    //设置收藏按钮的点击事件
+                    customDialog_View.findViewById(R.id.textView_dialog_collect).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ContentValues values = new ContentValues();
+                            values.put("type",list.get(position).getType());
+                            values.put("item_id",list.get(position).getId());
+                            values.put("title",list.get(position).getTitle());
+                            values.put("summary",list.get(position).getSummary());
+                            values.put("image",list.get(position).getImage());
+                            db.insert("content",null,values);
+                            dialog.dismiss();
+                            Toast.makeText(getActivity(), "影评已收藏", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    //设置分享按钮的点击事件
+                    customDialog_View.findViewById(R.id.textView_dialog_share).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getActivity(), "影评已分享", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    });
+                    return true;
+                }
+            });
+
         }
 
         @Override
@@ -144,7 +189,7 @@ public class MyFragmentMovie extends Fragment {
             return list.size();
         }
 
-        class MyViewHolder extends RecyclerView.ViewHolder{
+        class MyViewHolder extends RecyclerView.ViewHolder {
             TextView tv_title;
             ImageView iv;
             TextView tv_summary;
@@ -152,10 +197,10 @@ public class MyFragmentMovie extends Fragment {
 
             public MyViewHolder(View itemView) {
                 super(itemView);
-                tv_title = (TextView)itemView.findViewById(R.id.textView_title_item);
-                iv = (ImageView)itemView.findViewById(R.id.imageView_item);
-                tv_summary = (TextView)itemView.findViewById(R.id.textView_summary_item);
-                tv_date_movie =(TextView)itemView.findViewById(R.id.textView_data_item_movie);
+                tv_title = (TextView) itemView.findViewById(R.id.textView_title_item);
+                iv = (ImageView) itemView.findViewById(R.id.imageView_item);
+                tv_summary = (TextView) itemView.findViewById(R.id.textView_summary_item);
+                tv_date_movie = (TextView) itemView.findViewById(R.id.textView_data_item_movie);
             }
         }
     }

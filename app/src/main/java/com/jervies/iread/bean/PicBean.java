@@ -29,9 +29,6 @@ public class PicBean {
          * publishtime : 636148512000000000
          * title : 喵星人占领世界
          * summary : 世界那么大，我却偏偏遇见你；世界那么小，我却偏偏丢了你。
-
-         世界那么大，我却总是无法忘记你；世界那么小，我却总是无法遇见你。
-
          * image : images/69B6CE641E6E385B3DD05F8957FA6A40.jpg
          */
         private int id;

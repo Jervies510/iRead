@@ -6,8 +6,7 @@
     android:paddingTop="14dp"
     android:paddingBottom="14dp"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    >
+    android:paddingRight="10dp">
 
     <ImageView
         android:id="@+id/ImageView_listView_item_left"
@@ -20,7 +19,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/ImageView_listView_item_left"
-        android:layout_alignBottom="@id/ImageView_listView_item_left"
         android:layout_marginLeft="10dp"
         android:textSize="20sp"
         android:text="我的收藏"/>

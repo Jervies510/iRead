@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,12 +61,13 @@ public class MovieItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_movie_item);
-        mOkHttpClient = new OkHttpClient();
         Intent intent = getIntent();
         item_id = intent.getIntExtra("item_id", 0);    //获取从Fragment中传递来的数据-每篇影评所对应的id值
         item_type = intent.getIntExtra("item_type",0);
 
+        mOkHttpClient = new OkHttpClient();
         initView();
         initData();     //从网络中加载数据
     }

@@ -1,9 +1,12 @@
 package com.jervies.iread.fragment;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +20,7 @@ import com.jervies.iread.NovelItemActivity;
 import com.jervies.iread.R;
 import com.jervies.iread.UrlUtils.UrlUtils;
 import com.jervies.iread.bean.NovelBean;
+import com.jervies.iread.helpClass.MySQLiteOpenHelder;
 
 import org.w3c.dom.Text;
 
@@ -40,10 +44,12 @@ public class MyFragmentNovel extends Fragment {
 
     private RecyclerView mRecyclerView;
     private OkHttpClient mOkHttpClient;
+    private MySQLiteOpenHelder mMySQLiteOpenHelder;
     private TextView title;
 
     private ArrayList<NovelBean.ResultBean> list = new ArrayList<>();
     private MyRecyclerViewNovelAdapter adapter;
+    private SQLiteDatabase db;
 
     @Nullable
     @Override
@@ -57,7 +63,8 @@ public class MyFragmentNovel extends Fragment {
         mOkHttpClient = new OkHttpClient();
         mRecyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        mMySQLiteOpenHelder = new MySQLiteOpenHelder(getActivity(),"iRead",null,1);
+        db = mMySQLiteOpenHelder.getReadableDatabase();
         //设置显示标题栏的显示内容
         title = (TextView)view.findViewById(R.id.textView_TitleBar);
         title.setText("美文精选");
@@ -133,6 +140,44 @@ public class MyFragmentNovel extends Fragment {
                     intent.putExtra("item_id",list.get(position).getId());
                     intent.putExtra("item_type",list.get(position).getType());
                     startActivity(intent);
+                }
+            });
+
+            //给Item添加长按监听事件，用于显示自定义AlertDialog
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    View customDialog_View = LayoutInflater.from(getActivity()).inflate(R.layout.custom_dialog, null);
+                    final AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                            .setView(customDialog_View)
+                            .show();
+                    //设置Dialog的显示标题
+                    TextView dialogTitle = (TextView) customDialog_View.findViewById(R.id.textView_CustomDialog_title);
+                    dialogTitle.setText("美文精选");
+                    //设置收藏按钮的点击事件
+                    customDialog_View.findViewById(R.id.textView_dialog_collect).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ContentValues values = new ContentValues();
+                            values.put("type",list.get(position).getType());
+                            values.put("item_id",list.get(position).getId());
+                            values.put("title",list.get(position).getTitle());
+                            values.put("summary",list.get(position).getSummary());
+                            db.insert("content",null,values);
+                            dialog.dismiss();
+                            Toast.makeText(getActivity(), "美文已收藏", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+                    //设置分享按钮的点击事件
+                    customDialog_View.findViewById(R.id.textView_dialog_share).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getActivity(), "美文已分享", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    });
+                    return true;
                 }
             });
         }
