@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jervies.iread.UrlUtils.UrlUtils;
 import com.jervies.iread.bean.NovelItemBean;
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 
 import java.io.IOException;
 
@@ -25,6 +26,7 @@ public class NovelItemActivity extends AppCompatActivity {
 
     private OkHttpClient mOkHttpClient;
     private NovelItemBean mNovelItemBean;
+    private LoadingDialog mLoadingDialog;
 
     private TextView mTextViewNovelItemTitle;
     private TextView mTextViewNovelItemAuthor;
@@ -66,6 +68,16 @@ public class NovelItemActivity extends AppCompatActivity {
      * 通过OkHttp加载网络数据
      */
     private void initData() {
+        //网络加载数据时弹出正在加载数据对话框
+        mLoadingDialog = new LoadingDialog(this);
+        mLoadingDialog.setLoadingText("正在加载...")
+                .setSize(80)
+                .setShowTime(500)   //加载成功或失败动画后显示的时间
+                .setLoadSpeed(LoadingDialog.Speed.SPEED_ONE)    //加载成功或失败动画的速度快慢
+                .setInterceptBack(false)    //拦截返回按钮效果
+                .show();
+
+        //网络加载数据
         Request request = new Request.Builder()
                 .url(UrlUtils.URLNOVELITEM + item_id)
                 .build();
@@ -73,11 +85,24 @@ public class NovelItemActivity extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(NovelItemActivity.this, "美文加载失败", Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mLoadingDialog.close();
+                        finish();
+                        Toast.makeText(NovelItemActivity.this, "无网络嘞，你查查", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mLoadingDialog.close();
+                    }
+                });
                 NovelItemBean novelItemBean = new Gson().fromJson(response.body().string(), NovelItemBean.class);
                 Message msg = new Message();
                 msg.obj = novelItemBean;

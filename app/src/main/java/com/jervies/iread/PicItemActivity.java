@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.jervies.iread.UrlUtils.UrlUtils;
 import com.jervies.iread.bean.PicItemBean;
 import com.squareup.picasso.Picasso;
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 
 import java.io.IOException;
 
@@ -27,6 +28,7 @@ public class PicItemActivity extends AppCompatActivity {
 
     private OkHttpClient mOkHttpClient;
     private PicItemBean mPicItemBean;
+    private LoadingDialog mLoadingDialog;
 
     private int item_type;
     private int item_id;
@@ -65,6 +67,16 @@ public class PicItemActivity extends AppCompatActivity {
      * 通过OkHttp网络请求加载数据
      */
     private void initData() {
+        //网络加载数据时弹出正在加载数据对话框
+        mLoadingDialog = new LoadingDialog(this);
+        mLoadingDialog.setLoadingText("正在加载...")
+                .setSize(80)
+                .setShowTime(500)   //加载成功或失败动画后显示的时间
+                .setLoadSpeed(LoadingDialog.Speed.SPEED_ONE)    //加载成功或失败动画的速度快慢
+                .setInterceptBack(false)    //拦截返回按钮效果
+                .show();
+
+        //网络加载数据
         Request request = new Request.Builder()
                 .url(UrlUtils.URLPICITEM + item_id)
                 .build();
@@ -72,11 +84,24 @@ public class PicItemActivity extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(PicItemActivity.this, "美图加载失败", Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mLoadingDialog.close();
+                        finish();
+                        Toast.makeText(PicItemActivity.this, "无网络嘞，你查查", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mLoadingDialog.close();
+                    }
+                });
                 PicItemBean picItemBean = new Gson().fromJson(response.body().string(), PicItemBean.class);
 
                 Message msg = new Message();

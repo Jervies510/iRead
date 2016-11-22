@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.jervies.iread.UrlUtils.UrlUtils;
 import com.jervies.iread.bean.MovieItemBean;
 import com.squareup.picasso.Picasso;
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class MovieItemActivity extends AppCompatActivity {
 
     private MovieItemBean mMovieItemBean;
     private OkHttpClient mOkHttpClient;
+    private LoadingDialog mLoadingDialog;
     private int item_id;    //每篇影评所对应的id值
     private int item_type;  //用于区别是影评，美文，美图的类型
 
@@ -76,6 +78,17 @@ public class MovieItemActivity extends AppCompatActivity {
      * 通过OkHttp加载网络数据，并添加到list集合中
      */
     private void initData() {
+
+        //网络加载数据时弹出正在加载数据对话框
+        mLoadingDialog = new LoadingDialog(this);
+        mLoadingDialog.setLoadingText("正在加载...")
+                .setSize(80)
+                .setShowTime(500)   //加载成功或失败动画后显示的时间
+                .setLoadSpeed(LoadingDialog.Speed.SPEED_ONE)    //加载成功或失败动画的速度快慢
+                .setInterceptBack(false)    //拦截返回按钮效果
+                .show();
+
+        //网络加载数据
         Request request = new Request.Builder()
                 .url(UrlUtils.URLMOVIEITEM + item_id)
                 .build();
@@ -83,11 +96,26 @@ public class MovieItemActivity extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(MovieItemActivity.this, "内容加载失败", Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mLoadingDialog.close();
+                        finish();
+                        Toast.makeText(MovieItemActivity.this, "无网络嘞，你查查", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mLoadingDialog.close();
+                    }
+                });
                 final MovieItemBean movieItemBean = new Gson().fromJson(response.body().string(), MovieItemBean.class);
                 //Log.d("tmd", "onResponse: movieItemBean :" + movieItemBean.toString());
                 Message msg = new Message();

@@ -3,6 +3,7 @@ package com.jervies.iread.fragment;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,11 +19,12 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jervies.iread.MovieItemActivity;
-import com.jervies.iread.R;
 import com.jervies.iread.UrlUtils.UrlUtils;
 import com.jervies.iread.bean.MovieBean;
+import com.jervies.iread.R;
 import com.jervies.iread.helpClass.MySQLiteOpenHelder;
 import com.squareup.picasso.Picasso;
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -30,6 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -50,6 +54,7 @@ public class MyFragmentMovie extends Fragment {
     private ArrayList<MovieBean.ResultBean> list = new ArrayList<>();
     private MyRecyclerViewAdapter adapter;
     private SQLiteDatabase db;
+    private LoadingDialog mLoadingDialog;
 
     @Nullable
     @Override
@@ -60,17 +65,21 @@ public class MyFragmentMovie extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mOkHttpClient = new OkHttpClient();
-        mMySQLiteOpenHelder = new MySQLiteOpenHelder(getActivity(),"iRead",null,1);
-        db = mMySQLiteOpenHelder.getReadableDatabase();
-        //设置显示标题栏的显示内容
-        title = (TextView) view.findViewById(R.id.textView_TitleBar);
+        initView(view);
         title.setText("影评精选");
 
         initRecyclerViewData();
         initRecyclerViewAdapter();
+    }
+
+    private void initView(View view) {
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mOkHttpClient = new OkHttpClient();
+        mMySQLiteOpenHelder = new MySQLiteOpenHelder(getActivity(), "iRead", null, 1);
+        db = mMySQLiteOpenHelder.getWritableDatabase();
+        //设置显示标题栏的显示内容
+        title = (TextView) view.findViewById(R.id.textView_TitleBar);
     }
 
     /**
@@ -85,6 +94,15 @@ public class MyFragmentMovie extends Fragment {
      * 通过OkHttp框架加载网络数据
      */
     private void initRecyclerViewData() {
+        //网络加载数据时弹出正在加载数据对话框
+        mLoadingDialog = new LoadingDialog(getActivity());
+        mLoadingDialog.setLoadingText("正在加载...")
+                .setSize(80)
+                .setShowTime(500)   //加载成功或失败动画后显示的时间
+                .setLoadSpeed(LoadingDialog.Speed.SPEED_ONE)    //加载成功或失败动画的速度快慢
+                .setInterceptBack(false)    //拦截返回按钮效果
+                .show();
+        //进行网络请求
         final Request request = new Request.Builder()
                 .url(UrlUtils.URLMOVIE)
                 .build();
@@ -92,12 +110,24 @@ public class MyFragmentMovie extends Fragment {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(getActivity(), "影评加载失败", Toast.LENGTH_SHORT).show();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mLoadingDialog.close();
+                        Toast.makeText(getActivity(), "内容加载失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 // Log.d("tmd", "onResponse: response的加载结果是：" +response.body().string());
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mLoadingDialog.close();
+                    }
+                });
                 MovieBean movieBean = new Gson().fromJson(response.body().string(), MovieBean.class);
                 list.clear();
                 list.addAll(movieBean.getResult());
@@ -159,13 +189,14 @@ public class MyFragmentMovie extends Fragment {
                     customDialog_View.findViewById(R.id.textView_dialog_collect).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            //Cursor cursor = db.query("content", new String[]{"type"}, "type = 1", null, null, null, null);
                             ContentValues values = new ContentValues();
-                            values.put("type",list.get(position).getType());
-                            values.put("item_id",list.get(position).getId());
-                            values.put("title",list.get(position).getTitle());
-                            values.put("summary",list.get(position).getSummary());
-                            values.put("image",list.get(position).getImage());
-                            db.insert("content",null,values);
+                            values.put("type", list.get(position).getType());
+                            values.put("item_id", list.get(position).getId());
+                            values.put("title", list.get(position).getTitle());
+                            values.put("summary", list.get(position).getSummary());
+                            values.put("image", list.get(position).getImage());
+                            db.insert("content", null, values);
                             dialog.dismiss();
                             Toast.makeText(getActivity(), "影评已收藏", Toast.LENGTH_SHORT).show();
                         }
@@ -174,14 +205,14 @@ public class MyFragmentMovie extends Fragment {
                     customDialog_View.findViewById(R.id.textView_dialog_share).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(getActivity(), "影评已分享", Toast.LENGTH_SHORT).show();
+                            showShare(position);
+                            //Toast.makeText(getActivity(), "影评已分享", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
                     });
                     return true;
                 }
             });
-
         }
 
         @Override
@@ -203,5 +234,39 @@ public class MyFragmentMovie extends Fragment {
                 tv_date_movie = (TextView) itemView.findViewById(R.id.textView_data_item_movie);
             }
         }
+    }
+
+    /**
+     * 分享时所调用的方法
+     */
+    private void showShare(int position) {
+        ShareSDK.initSDK(getActivity());
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
+        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+        oks.setTitle(list.get(position).getTitle());
+        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+        oks.setTitleUrl("http://sharesdk.cn");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText(list.get(position).getSummary());
+        //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
+        oks.setImageUrl("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+        // url仅在微信（包括好友和朋友圈）中使用
+        oks.setUrl("http://sharesdk.cn");
+        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+        oks.setComment("我是测试评论文本");
+        // site是分享此内容的网站名称，仅在QQ空间使用
+        oks.setSite("iRead");
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+        oks.setSiteUrl("http://sharesdk.cn");
+
+        // 启动分享GUI
+        oks.show(getActivity());
     }
 }

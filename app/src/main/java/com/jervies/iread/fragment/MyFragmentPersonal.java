@@ -14,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jervies.iread.AboutUsActivity;
 import com.jervies.iread.CollectActivity;
+import com.jervies.iread.FeedBackActivity;
 import com.jervies.iread.R;
 import com.jervies.iread.bean.PersonalListViewBean;
 
@@ -59,12 +61,11 @@ public class MyFragmentPersonal extends Fragment {
                     case 1:
 
                         break;
-
                     case 2:
-
+                        startActivity(new Intent(getActivity(), FeedBackActivity.class));
                         break;
                     case 3:
-
+                        startActivity(new Intent(getActivity(), AboutUsActivity.class));
                         break;
                 }
             }

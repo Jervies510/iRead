@@ -13,7 +13,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="10dp"
-        android:textSize="22sp"
+        android:textSize="20sp"
         android:textColor="#36a94c"/>
 
     <View
@@ -30,6 +30,7 @@
         android:orientation="horizontal"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="15dp">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +40,7 @@
             android:id="@+id/textView_dialog_collect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:clickable="true"
             android:layout_marginLeft="20dp"
             android:text="收藏    "/>
@@ -49,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="40dp"
         android:layout_marginBottom="30dp">
 
@@ -62,7 +63,7 @@
             android:id="@+id/textView_dialog_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:clickable="true"
             android:layout_marginLeft="20dp"
             android:text="分享    "/>

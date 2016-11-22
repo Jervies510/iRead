@@ -22,17 +22,18 @@
         <ImageView
             android:id="@+id/imageView_item"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="200dp"
+            android:padding="14dp"
+            android:layout_marginTop="8dp"
             android:src="@mipmap/ic_launcher"
-            android:scaleType="fitXY"
-            android:paddingTop="10dp"/>
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/textView_summary_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lines="2"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:paddingTop="10dp"/>
 
         <RelativeLayout
@@ -43,7 +44,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="#000000"
                 android:text="查看全文"/>
 

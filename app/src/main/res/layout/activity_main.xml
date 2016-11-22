@@ -11,7 +11,7 @@
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         tabLayout:tabMode="fixed"
         tabLayout:tabGravity="fill"
         tabLayout:tabSelectedTextColor="#329d47"
@@ -26,8 +26,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
         android:background="#beb7b7"
         android:layout_above="@id/tabLayout"/>
-
 </RelativeLayout>

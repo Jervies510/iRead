@@ -11,8 +11,7 @@
     <ImageView
         android:id="@+id/ImageView_listView_item_left"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/setting_aboutus"/>
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/textView_listView_item"
@@ -20,13 +19,11 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/ImageView_listView_item_left"
         android:layout_marginLeft="10dp"
-        android:textSize="20sp"
-        android:text="我的收藏"/>
+        android:textSize="18sp"/>
 
     <ImageView
         android:id="@+id/ImageView_listView_item_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:src="@mipmap/setting_arrow_night"/>
+        android:layout_alignParentRight="true"/>
 </RelativeLayout>
