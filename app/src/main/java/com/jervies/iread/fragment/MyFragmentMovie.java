@@ -2,6 +2,7 @@ package com.jervies.iread.fragment;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +22,16 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jervies.iread.MovieItemActivity;
 import com.jervies.iread.UrlUtils.UrlUtils;
+import com.jervies.iread.bean.CollectBean;
 import com.jervies.iread.bean.MovieBean;
 import com.jervies.iread.R;
+import com.jervies.iread.helpClass.CollectType;
 import com.jervies.iread.helpClass.MySQLiteOpenHelder;
 import com.squareup.picasso.Picasso;
 import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,6 +57,7 @@ public class MyFragmentMovie extends Fragment {
     private TextView title;
 
     private ArrayList<MovieBean.ResultBean> list = new ArrayList<>();
+    private ArrayList<CollectBean> mCollectBeans = new ArrayList<>();   //用于存储从数据库中读取的CollectBean对象
     private MyRecyclerViewAdapter adapter;
     private SQLiteDatabase db;
     private LoadingDialog mLoadingDialog;
@@ -189,7 +195,6 @@ public class MyFragmentMovie extends Fragment {
                     customDialog_View.findViewById(R.id.textView_dialog_collect).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //Cursor cursor = db.query("content", new String[]{"type"}, "type = 1", null, null, null, null);
                             ContentValues values = new ContentValues();
                             values.put("type", list.get(position).getType());
                             values.put("item_id", list.get(position).getId());
@@ -198,7 +203,7 @@ public class MyFragmentMovie extends Fragment {
                             values.put("image", list.get(position).getImage());
                             db.insert("content", null, values);
                             dialog.dismiss();
-                            Toast.makeText(getActivity(), "影评已收藏", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "收藏成功", Toast.LENGTH_SHORT).show();
                         }
                     });
                     //设置分享按钮的点击事件

@@ -195,7 +195,7 @@ public class MyFragmentPic extends Fragment {
                             values.put("image", list.get(position).getImage());
                             db.insert("content", null, values);
                             dialog.dismiss();
-                            Toast.makeText(getActivity(), "美图已收藏", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "收藏成功", Toast.LENGTH_SHORT).show();
 
                         }
                     });

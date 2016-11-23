@@ -90,48 +90,46 @@ public class CollectActivity extends AppCompatActivity implements View.OnClickLi
         listPic.clear();
 //        SQLiteDatabase db = mMySQLiteOpenHelder.getReadableDatabase();
         Cursor cursor = db.query("content", null, null, null, null, null, null);
-        Log.d("tmd", "initData: cursor: "+cursor.toString());
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                int _id = cursor.getInt(cursor.getColumnIndex("_id"));
-                int type = cursor.getInt(cursor.getColumnIndex("type"));
-                int item_id = cursor.getInt(cursor.getColumnIndex("item_id"));
-                String title = cursor.getString(cursor.getColumnIndex("title"));
-                String summary = cursor.getString(cursor.getColumnIndex("summary"));
-                String image = cursor.getString(cursor.getColumnIndex("image"));
-                switch (type) {
-                    case TYPE_MOVIE:
-                        listMovie.add(new CollectBean(_id, type, item_id, title, summary, image));
-                        break;
-                    case TYPE_NOVEL:
-                        listNovel.add(new CollectBean(_id, type, item_id, title, summary, image));
-                        break;
-                    case TYPE_PIC:
-                        listPic.add(new CollectBean(_id, type, item_id, title, summary, image));
-                        break;
-                }
-                //用于判断收藏内容上边的小标题是否显示，如果集合中有数据，即有显示列表，小标题显示，否则不显示
-                if (listMovie.size() != 0) {
-                    mTextViewCollectActivitySubTitleMovie.setVisibility(View.VISIBLE);
-                } else {
-                    mTextViewCollectActivitySubTitleMovie.setVisibility(View.GONE);
-                }
-                if (listNovel.size() != 0) {
-                    mTextViewCollectActivitySubTitleNovel.setVisibility(View.VISIBLE);
-                } else {
-                    mTextViewCollectActivitySubTitleNovel.setVisibility(View.GONE);
-                }
-                if (listPic.size() != 0) {
-                    mTextViewCollectActivitySubTitlePic.setVisibility(View.VISIBLE);
-                } else {
-                    mTextViewCollectActivitySubTitlePic.setVisibility(View.GONE);
-                }
-                //数据更新后刷新适配器
-                movieAdapter.notifyDataSetChanged();
-                novelAdapter.notifyDataSetChanged();
-                picAdapter.notifyDataSetChanged();
+        while (cursor.moveToNext()) {
+            //int _id = cursor.getInt(cursor.getColumnIndex("_id"));
+            int type = cursor.getInt(cursor.getColumnIndex("type"));
+            int item_id = cursor.getInt(cursor.getColumnIndex("item_id"));
+            String title = cursor.getString(cursor.getColumnIndex("title"));
+            String summary = cursor.getString(cursor.getColumnIndex("summary"));
+            String image = cursor.getString(cursor.getColumnIndex("image"));
+            switch (type) {
+                case TYPE_MOVIE:
+                    listMovie.add(new CollectBean(type, item_id, title, summary, image));
+                    break;
+                case TYPE_NOVEL:
+                    listNovel.add(new CollectBean(type, item_id, title, summary, image));
+                    break;
+                case TYPE_PIC:
+                    listPic.add(new CollectBean(type, item_id, title, summary, image));
+                    break;
             }
-        } else {
+            //用于判断收藏内容上边的小标题是否显示，如果集合中有数据，即有显示列表，小标题显示，否则不显示
+            if (listMovie.size() != 0) {
+                mTextViewCollectActivitySubTitleMovie.setVisibility(View.VISIBLE);
+            } else {
+                mTextViewCollectActivitySubTitleMovie.setVisibility(View.GONE);
+            }
+            if (listNovel.size() != 0) {
+                mTextViewCollectActivitySubTitleNovel.setVisibility(View.VISIBLE);
+            } else {
+                mTextViewCollectActivitySubTitleNovel.setVisibility(View.GONE);
+            }
+            if (listPic.size() != 0) {
+                mTextViewCollectActivitySubTitlePic.setVisibility(View.VISIBLE);
+            } else {
+                mTextViewCollectActivitySubTitlePic.setVisibility(View.GONE);
+            }
+            //数据更新后刷新适配器
+            movieAdapter.notifyDataSetChanged();
+            novelAdapter.notifyDataSetChanged();
+            picAdapter.notifyDataSetChanged();
+        }
+        if (!cursor.moveToNext()) {
             Log.d("tmd", "initData: cursor not null");
             mTextViewCollectActivitySubTitleMovie.setVisibility(View.GONE);
             mTextViewCollectActivitySubTitleNovel.setVisibility(View.GONE);
@@ -141,6 +139,8 @@ public class CollectActivity extends AppCompatActivity implements View.OnClickLi
             novelAdapter.notifyDataSetChanged();
             picAdapter.notifyDataSetChanged();
         }
+
+
     }
 
     private void initView() {
@@ -233,6 +233,11 @@ public class CollectActivity extends AppCompatActivity implements View.OnClickLi
             }
             return listMovie.size();
         }
+
+//        @Override
+//        public int getItemViewType(int position) {
+//            return super.getItemViewType(position);
+//        }
 
         class MovieViewHolder extends RecyclerView.ViewHolder {
             ImageView iv;

@@ -191,7 +191,7 @@ public class MyFragmentNovel extends Fragment {
                             values.put("summary",list.get(position).getSummary());
                             db.insert("content",null,values);
                             dialog.dismiss();
-                            Toast.makeText(getActivity(), "美文已收藏", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "收藏成功", Toast.LENGTH_SHORT).show();
 
                         }
                     });

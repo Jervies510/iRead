@@ -6,15 +6,15 @@ package com.jervies.iread.bean;
 
 public class CollectBean {
 
-    private int _id;
+    //private int _id;
     private int type;
     private int item_id;
     private String title;
     private String summary;
     private String image;
 
-    public CollectBean(int _id,int type, int item_id, String title, String summary, String image) {
-        this._id= _id;
+    public CollectBean(int type, int item_id, String title, String summary, String image) {
+        //this._id= _id;
         this.type = type;
         this.item_id = item_id;
         this.title = title;
@@ -61,7 +61,7 @@ public class CollectBean {
     public void setImage(String image) {
         this.image = image;
     }
-
+/*
     public int get_id() {
         return _id;
     }
@@ -69,6 +69,7 @@ public class CollectBean {
     public void set_id(int _id) {
         this._id = _id;
     }
+*/
 
     @Override
     public String toString() {
